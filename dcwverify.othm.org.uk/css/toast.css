@@ -1,0 +1,52 @@
+﻿#toast-container > div.toast {
+  padding: 0;
+  opacity: 1;
+  background-image: unset !important;
+  background-color: white;
+  cursor: auto;
+  border-radius: 5px;
+}
+#toast-container > div.toast:hover {
+  -webkit-box-shadow: 0 0 12px #999999;
+  box-shadow: 0 0 12px #999999;
+}
+#toast-container > div.toast button {
+  font-family: "Font Awesome 5 Pro";
+  padding: 8px 16px;
+  opacity: 1;
+  text-shadow: none;
+}
+#toast-container > div.toast button:before {
+  content: "\f00d";
+  font-size: 16px;
+  font-weight: 100;
+}
+#toast-container > div.toast button:hover {
+  color: #282a3c;
+}
+#toast-container > div.toast .toast-title {
+  color: white;
+  padding: 8px 16px;
+  margin: 0;
+}
+#toast-container > div.toast .toast-title i {
+  margin-right: 8px;
+}
+#toast-container > div.toast .toast-message {
+  color: black;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+#toast-container > div.toast .toast-message a {
+  border-color: #545b62;
+  color: black;
+  margin-top: 16px;
+  align-self: center;
+}
+#toast-container > div.toast.toast-error .toast-title {
+  background-color: #E51B24;
+}
+#toast-container > div.toast.toast-success .toast-title {
+  background-color: #1a695f;
+}
