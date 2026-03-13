@@ -10,6 +10,7 @@ const upload = multer({ dest: 'uploads/' });
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const dbPath = path.join(__dirname, 'database.json');
 
@@ -29,7 +30,7 @@ function saveDatabase(data) {
 
 // API to create a new record
 app.post('/api/save', upload.single('pdfFile'), (req, res) => {
-    const data = req.body;
+    const data = req.body || {};
     const file = req.file;
     if (!data.reference) {
         return res.status(400).json({ error: 'Reference is required' });
