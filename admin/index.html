@@ -62,26 +62,29 @@
         document.getElementById('dataForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const data = {
-                name: document.getElementById('name').value,
-                reference: document.getElementById('reference').value,
-                dateOfAward: document.getElementById('dateOfAward').value,
-                qualificationTitle: document.getElementById('qualificationTitle').value,
-                issuingBody: document.getElementById('issuingBody').value
-            };
+            const formData = new FormData();
+            formData.append('name', document.getElementById('name').value);
+            formData.append('reference', document.getElementById('reference').value);
+            formData.append('dateOfAward', document.getElementById('dateOfAward').value);
+            formData.append('qualificationTitle', document.getElementById('qualificationTitle').value);
+            formData.append('issuingBody', document.getElementById('issuingBody').value);
+            
+            const pdfFile = document.getElementById('pdfFile').files[0];
+            if (pdfFile) {
+                formData.append('pdfFile', pdfFile);
+            }
 
             try {
                 const response = await fetch('/api/save', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    body: formData
                 });
                 
                 const result = await response.json();
                 const resultDiv = document.getElementById('result');
                 
                 if (result.success) {
-                    const generatedUrl = `${window.location.origin}/?reference=${data.reference}`;
+                    const generatedUrl = `${window.location.origin}/?reference=${document.getElementById('reference').value}`;
                     
                     resultDiv.className = 'success';
                     resultDiv.style.display = 'block';

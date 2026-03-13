@@ -3,6 +3,10 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -24,21 +28,25 @@ function saveDatabase(data) {
 }
 
 // API to create a new record
-app.post('/api/save', (req, res) => {
+app.post('/api/save', upload.single('pdfFile'), (req, res) => {
     const data = req.body;
+    const file = req.file;
     if (!data.reference) {
         return res.status(400).json({ error: 'Reference is required' });
     }
 
     const db = getDatabase();
+
     db[data.reference] = {
         name: data.name,
         dateOfAward: data.dateOfAward,
         qualificationTitle: data.qualificationTitle,
         issuingBody: data.issuingBody || 'OTHM',
         reference: data.reference,
-        uuid: '10c0f21d-696e-4243-5a73-08dbfa75cdb4' // we can just keep the static UUID for the PDF viewer
+        uuid: '10c0f21d-696e-4243-5a73-08dbfa75cdb4',
+        pdfPath: file ? file.filename : null
     };
+
     saveDatabase(db);
     res.json({ success: true, message: 'Saved successfully', record: db[data.reference] });
 });
@@ -82,6 +90,15 @@ app.get(['/', '/index.html'], (req, res, next) => {
                 const formattedDate = `${record.dateOfAward}T00:00:00`;
                 html = html.replace(/data-awarddate="2023-12-21T00:00:00"/g, `data-awarddate="${formattedDate}"`);
 
+                
+                // Pass the reference down into the viewer iframe
+                html = html.replace(/viewer\/data\/false\/0\//g, 'viewer/data/false/0/'); // keep api mock static
+                
+                // The actual iframe loading is done in js/documentViewer.js, we need to pass the reference there.
+                // An easier way is to just replace the global var or modify the JS URL, or inject a script
+                html = html.replace('</head>', `<script>window.CURRENT_REFERENCE = ${record.reference};</script>
+</head>`);
+
                 // 3. Replace any remaining visible DOM text
                 html = html.replace(/SHUAI BI/g, record.name);
                 html = html.replace(/93998164-01-TNU8/g, record.reference);
@@ -95,6 +112,39 @@ app.get(['/', '/index.html'], (req, res, next) => {
                 html = html.replace(/21\/12\/2023/g, displayDate);
 
             }
+        }
+        res.send(html);
+    });
+});
+
+
+// Serve the dynamic PDF based on the reference passed in query string
+app.get('/viewer/view/view.pdf', (req, res, next) => {
+    const reference = req.query.ref;
+    if (reference) {
+        const db = getDatabase();
+        const record = db[reference];
+        if (record && record.pdfPath) {
+            const pdfFile = path.join(__dirname, 'uploads', record.pdfPath);
+            if (fs.existsSync(pdfFile)) {
+                return res.sendFile(pdfFile);
+            }
+        }
+    }
+    // Fallback to the default view.pdf
+    res.sendFile(path.join(__dirname, 'verification.othm.org.uk', 'viewer', 'view', 'view.pdf'));
+});
+
+// Intercept the iframe HTML to pass the reference down to the initialDoc
+app.get('/viewer/view/10c0f21d-696e-4243-5a73-08dbfa75cdb4.html', (req, res, next) => {
+    const reference = req.query.ref;
+    let htmlPath = path.join(__dirname, 'verification.othm.org.uk', 'viewer', 'view', '10c0f21d-696e-4243-5a73-08dbfa75cdb4.html');
+    
+    fs.readFile(htmlPath, 'utf8', (err, html) => {
+        if (err) return next(err);
+        if (reference) {
+            html = html.replace("initialDoc: '/viewer/view/view.pdf'", `initialDoc: '/viewer/view/view.pdf?ref=${reference}'`);
+            html = html.replace("initialDoc: 'http://localhost:8081/viewer/view/view.pdf'", `initialDoc: 'http://localhost:8081/viewer/view/view.pdf?ref=${reference}'`);
         }
         res.send(html);
     });
