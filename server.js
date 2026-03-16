@@ -134,11 +134,14 @@ app.get('/viewer/view/view.pdf', (req, res, next) => {
         if (record && record.pdfPath) {
             const pdfFile = path.join(__dirname, 'uploads', record.pdfPath);
             if (fs.existsSync(pdfFile)) {
+                res.set("Content-Type", "application/pdf");
+                res.set("Content-Type", "application/pdf");
                 return res.sendFile(pdfFile);
             }
         }
     }
     // Fallback to the default view.pdf
+    res.set("Content-Type", "application/pdf");
     res.sendFile(path.join(__dirname, 'verification.othm.org.uk', 'viewer', 'view', 'view.pdf'));
 });
 
