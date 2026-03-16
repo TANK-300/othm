@@ -5,7 +5,7 @@ const cors = require('cors');
 
 const multer = require('multer');
 
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = '/www/wwwroot/othm-uploads';
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -29,10 +29,14 @@ const upload = multer({ storage: storage });
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static('/www/wwwroot/othm-uploads'));
 app.use(express.urlencoded({ extended: true }));
 
-const dbPath = path.join(__dirname, 'database.json');
+const dataDir = '/www/wwwroot/othm-data';
+if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+}
+const dbPath = path.join(dataDir, 'database.json');
 
 // Initialize DB if not exists
 if (!fs.existsSync(dbPath)) {
@@ -88,6 +92,10 @@ app.get(['/', '/index.html'], (req, res, next) => {
 
             if (record) {
                 
+                
+                // Add meta anti-caching to the top of the HTML just in case headers are stripped by proxies
+                html = html.replace('<head>', `<head>\n<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">\n<meta http-equiv="Pragma" content="no-cache">\n<meta http-equiv="Expires" content="0">`);
+
                 // 1. Replace the JSON data FIRST
                 const verifyData = {
                     id: record.uuid,

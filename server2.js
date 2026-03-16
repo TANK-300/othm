@@ -7,7 +7,11 @@ const app2 = express();
 app2.use(cors());
 
 
-const dbPath = path.join(__dirname, 'database.json');
+const dataDir = '/www/wwwroot/othm-data';
+if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+}
+const dbPath = path.join(dataDir, 'database.json');
 
 function getDatabase() {
     if (fs.existsSync(dbPath)) {
@@ -29,6 +33,10 @@ app2.get(['/connections', '/index.html', '/'], (req, res, next) => {
 
             if (record) {
                 console.log("Server 2 got reference:", reference, record);
+                
+                // Add meta anti-caching to the top of the HTML just in case headers are stripped by proxies
+                html = html.replace('<head>', `<head>\n<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">\n<meta http-equiv="Pragma" content="no-cache">\n<meta http-equiv="Expires" content="0">`);
+
                 // Replace name in connection page
                 html = html.replace(/SHUAI BI/g, record.name);
                 // Replace reference in connection page
