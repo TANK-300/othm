@@ -25,7 +25,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const ref = urlParams.get('ref');
         
-        let pdfUrl = '/viewer/view/view.pdf';
+        let pdfUrl = '/api/document/download';
         if (ref) {
             pdfUrl += '?ref=' + ref;
         }

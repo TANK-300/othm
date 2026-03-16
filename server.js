@@ -126,7 +126,7 @@ app.get(['/', '/index.html'], (req, res, next) => {
 
 
 // Serve the dynamic PDF based on the reference passed in query string
-app.get('/viewer/view/view.pdf', (req, res, next) => {
+app.get('/api/document/download', (req, res, next) => {
     const reference = req.query.ref;
     if (reference) {
         const db = getDatabase();
