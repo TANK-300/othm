@@ -195,7 +195,7 @@ app.get('/admin', (req, res) => {
 // Route for footer pages
 app.get('/Pages/:page', (req, res, next) => {
     const pageName = req.params.page;
-    const validPages = ['Privacy', 'Faq', 'Terms', 'Support'];
+    const validPages = ['Privacy', 'Faq', 'Terms', 'Support', 'Accessibility'];
     
     if (validPages.includes(pageName)) {
         const filePath = path.join(__dirname, 'verification.othm.org.uk', 'Pages', pageName + '.html');
