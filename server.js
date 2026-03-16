@@ -136,7 +136,12 @@ app.get(['/', '/index.html'], (req, res, next) => {
 
             }
         }
+        
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.set('Expires', '-1');
+        res.set('Pragma', 'no-cache');
         res.send(html);
+
     });
 });
 
@@ -172,7 +177,12 @@ app.get('/viewer/view/10c0f21d-696e-4243-5a73-08dbfa75cdb4.html', (req, res, nex
             html = html.replace("initialDoc: '/viewer/view/view.pdf'", `initialDoc: '/viewer/view/view.pdf?ref=${reference}'`);
             html = html.replace("initialDoc: 'http://localhost:8081/viewer/view/view.pdf'", `initialDoc: 'http://localhost:8081/viewer/view/view.pdf?ref=${reference}'`);
         }
+        
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.set('Expires', '-1');
+        res.set('Pragma', 'no-cache');
         res.send(html);
+
     });
 });
 
@@ -209,7 +219,12 @@ app.get('/connections', (req, res, next) => {
                 html = html.replace(/21\/12\/2023/g, displayDate);
             }
         }
+        
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.set('Expires', '-1');
+        res.set('Pragma', 'no-cache');
         res.send(html);
+
     });
 });
 
