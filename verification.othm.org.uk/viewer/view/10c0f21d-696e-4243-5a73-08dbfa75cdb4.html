@@ -33,6 +33,7 @@
         WebViewer({
             initialDoc: pdfUrl,
             path: '/lib/webviewer/public',
+            extension: 'pdf',
         }, document.getElementById('viewer')).then(instance => {
             // Disable elements to mimic the original view-only restrictions
             instance.UI.disableElements(['contextMenuPopup', 'selectToolButton', 'themeChangeButton', 'languageButton']);
