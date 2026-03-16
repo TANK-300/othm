@@ -35,11 +35,11 @@ app2.get(['/connections', '/index.html', '/'], (req, res, next) => {
                 html = html.replace(/93998164-01-TNU8/g, record.reference);
                 
                 // Format date for connection page (DD/MM/YYYY)
-                const d = new Date(record.dateOfAward);
-                const day = String(d.getDate()).padStart(2, '0');
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const year = d.getFullYear();
-                const displayDate = `${day}/${month}/${year}`;
+                const dateParts = record.dateOfAward.split('-'); // YYYY-MM-DD
+                const year = dateParts[0];
+                const month = dateParts[1];
+                const day = dateParts[2];
+                const displayDate = day + "/" + month + "/" + year;
                 
                 html = html.replace(/21\/12\/2023/g, displayDate);
             }

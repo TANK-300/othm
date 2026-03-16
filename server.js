@@ -105,11 +105,11 @@ app.get(['/', '/index.html'], (req, res, next) => {
 
                 // 2. Replace the data attributes
                 html = html.replace(/data-reference="93998164-01-TNU8"/g, `data-reference="${record.reference}"`);
-                html = html.replace(/https:\/\/dcwverify\.othm\.org\.uk\/connections\?reference=93998164-01-TNU8/g, `https://dcwverify.othm.org.uk/connections?reference=${record.reference}`);
+                html = html.replace(/https:\/\/dcwverify\.othm\.org\.uk\/connections\?reference=93998164-01-TNU8/g, `https://dcwverify.verification.mom/connections?reference=${record.reference}`);
                 html = html.replace(/data-studentfullname="SHUAI BI"/g, `data-studentfullname="${record.name}"`);
                 
-                const formattedDate = `${record.dateOfAward}T00:00:00`;
-                html = html.replace(/data-awarddate="2023-12-21T00:00:00"/g, `data-awarddate="${formattedDate}"`);
+                const formattedDate = `${record.dateOfAward}T12:00:00`;
+                html = html.replace(/data-awarddate="2023-12-21T00:00:00.0000000"/g, `data-awarddate="${formattedDate}"`);
                 
                 // Pass the reference down into the viewer iframe
                 html = html.replace(/viewer\/data\/false\/0\//g, 'viewer/data/false/0/'); // keep api mock static
@@ -126,17 +126,22 @@ app.get(['/', '/index.html'], (req, res, next) => {
                 html = html.replace(/SHUAI BI/g, record.name);
                 html = html.replace(/93998164-01-TNU8/g, record.reference);
                 
-                const d = new Date(record.dateOfAward);
-                const day = String(d.getDate()).padStart(2, '0');
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const year = d.getFullYear();
+                const dateParts = record.dateOfAward.split('-'); // YYYY-MM-DD
+                const year = dateParts[0];
+                const month = dateParts[1];
+                const day = dateParts[2];
                 const displayDate = day + "/" + month + "/" + year;
                 
                 html = html.replace(/21\/12\/2023/g, displayDate);
 
             }
         }
+        
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.set('Expires', '-1');
+        res.set('Pragma', 'no-cache');
         res.send(html);
+
     });
 });
 
@@ -172,7 +177,12 @@ app.get('/viewer/view/10c0f21d-696e-4243-5a73-08dbfa75cdb4.html', (req, res, nex
             html = html.replace("initialDoc: '/viewer/view/view.pdf'", `initialDoc: '/viewer/view/view.pdf?ref=${reference}'`);
             html = html.replace("initialDoc: 'http://localhost:8081/viewer/view/view.pdf'", `initialDoc: 'http://localhost:8081/viewer/view/view.pdf?ref=${reference}'`);
         }
+        
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.set('Expires', '-1');
+        res.set('Pragma', 'no-cache');
         res.send(html);
+
     });
 });
 
