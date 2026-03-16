@@ -105,7 +105,7 @@ app.get(['/', '/index.html'], (req, res, next) => {
 
                 // 2. Replace the data attributes
                 html = html.replace(/data-reference="93998164-01-TNU8"/g, `data-reference="${record.reference}"`);
-                html = html.replace(/https:\/\/dcwverify\.othm\.org\.uk\/connections\?reference=93998164-01-TNU8/g, `/connections?reference=${record.reference}`);
+                html = html.replace(/https:\/\/dcwverify\.othm\.org\.uk\/connections\?reference=93998164-01-TNU8/g, `https://dcwverify.verification.mom/connections?reference=${record.reference}`);
                 html = html.replace(/data-studentfullname="SHUAI BI"/g, `data-studentfullname="${record.name}"`);
                 
                 const formattedDate = `${record.dateOfAward}T00:00:00`;
