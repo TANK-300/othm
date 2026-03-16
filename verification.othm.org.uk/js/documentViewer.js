@@ -291,7 +291,7 @@ var DocumentViewer = function () {
 
     function setViewerIFrame(dataPath) {
         const containerSelector = getViewerSelector();
-        dataPath += ".html" + (window.CURRENT_REFERENCE ? "?ref=" + window.CURRENT_REFERENCE : "");
+        dataPath += (window.CURRENT_REFERENCE ? "?ref=" + window.CURRENT_REFERENCE : "");
         $(containerSelector).html("<iframe src='" + dataPath + "' class='w-100 h-100'></iframe>");
     }
 
