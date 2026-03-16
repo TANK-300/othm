@@ -27,7 +27,7 @@
         
         let pdfUrl = '/api/document/download';
         if (ref) {
-            pdfUrl += '?ref=' + ref;
+            pdfUrl += '?ref=' + ref + '&fake=.pdf';
         }
 
         WebViewer({
