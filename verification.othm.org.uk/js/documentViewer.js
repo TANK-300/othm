@@ -291,7 +291,7 @@ var DocumentViewer = function () {
 
     function setViewerIFrame(dataPath) {
         const containerSelector = getViewerSelector();
-        dataPath += (window.CURRENT_REFERENCE ? "?ref=" + window.CURRENT_REFERENCE : "") + (window.DIRECT_PDF_URL ? "&pdf=" + encodeURIComponent(window.DIRECT_PDF_URL) : "");
+        dataPath += "?ref=" + (window.CURRENT_REFERENCE || "") + "&pdf=" + encodeURIComponent(window.DIRECT_PDF_URL || "");
         $(containerSelector).html("<iframe src='" + dataPath + "' class='w-100 h-100'></iframe>");
     }
 
