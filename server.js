@@ -198,7 +198,12 @@ app.get('/Pages/:page', (req, res, next) => {
     const validPages = ['Privacy', 'Faq', 'Terms', 'Support'];
     
     if (validPages.includes(pageName)) {
-        res.sendFile(path.join(__dirname, 'verification.othm.org.uk', 'Pages', pageName + '.html'));
+        const filePath = path.join(__dirname, 'verification.othm.org.uk', 'Pages', pageName + '.html');
+        if (fs.existsSync(filePath)) {
+            res.sendFile(filePath);
+        } else {
+            res.status(404).send('Error: The HTML file for this page is missing on the server. Please run git pull to download it.');
+        }
     } else {
         next();
     }
