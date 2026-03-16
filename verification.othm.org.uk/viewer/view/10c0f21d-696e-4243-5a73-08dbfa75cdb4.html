@@ -42,6 +42,10 @@
             initialDoc: pdfUrl,
             path: '/lib/webviewer/public',
             extension: 'pdf',
+            backendType: 'ems',
+            fullAPI: true,
+            disableWebsockets: true,
+            streaming: false,
         }, document.getElementById('viewer')).then(instance => {
             instance.UI.disableElements(['contextMenuPopup', 'selectToolButton', 'themeChangeButton', 'languageButton']);
             instance.UI.disableFeatures([instance.UI.Feature.Print, instance.UI.Feature.Download, instance.UI.Feature.PageNavigation, instance.UI.Feature.Search, instance.UI.Feature.TextSelection, instance.UI.Feature.Annotations]);

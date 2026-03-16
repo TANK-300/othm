@@ -28,6 +28,13 @@ const upload = multer({ storage: storage });
 
 const app = express();
 app.use(cors());
+
+// Add partial content support to all static files and specific endpoints
+app.use((req, res, next) => {
+    res.setHeader('Accept-Ranges', 'bytes');
+    next();
+});
+
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.urlencoded({ extended: true }));
