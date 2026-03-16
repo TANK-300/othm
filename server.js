@@ -191,6 +191,19 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin', 'index.html'));
 });
 
+
+// Route for footer pages
+app.get('/Pages/:page', (req, res, next) => {
+    const pageName = req.params.page;
+    const validPages = ['Privacy', 'Faq', 'Terms', 'Support'];
+    
+    if (validPages.includes(pageName)) {
+        res.sendFile(path.join(__dirname, 'verification.othm.org.uk', 'Pages', pageName + '.html'));
+    } else {
+        next();
+    }
+});
+
 // Serve all other static files for verification.othm.org.uk
 app.use(express.static(path.join(__dirname, 'verification.othm.org.uk')));
 

@@ -48,6 +48,19 @@ app2.get(['/connections', '/index.html', '/'], (req, res, next) => {
     });
 });
 
+
+// Route for footer pages
+app2.get('/Pages/:page', (req, res, next) => {
+    const pageName = req.params.page;
+    const validPages = ['Privacy', 'Faq', 'Terms', 'Support'];
+    
+    if (validPages.includes(pageName)) {
+        res.sendFile(path.join(__dirname, 'dcwverify.othm.org.uk', 'Pages', pageName + '.html'));
+    } else {
+        next();
+    }
+});
+
 // Serve dcwverify static files
 app2.use(express.static(path.join(__dirname, 'dcwverify.othm.org.uk')));
 
