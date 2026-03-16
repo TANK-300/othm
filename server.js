@@ -9,7 +9,20 @@ const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
-const upload = multer({ dest: uploadDir });
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadDir)
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + '.pdf')
+    }
+});
+const upload = multer({ storage: storage });
+
+// Expose the uploads directory via static serving so we can just access URLs directly!
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 
 
