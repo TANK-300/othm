@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Expose the uploads directory via static serving so we can just access URLs directly!
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 
 
@@ -29,6 +29,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.urlencoded({ extended: true }));
 
 const dbPath = path.join(__dirname, 'database.json');
@@ -109,15 +110,17 @@ app.get(['/', '/index.html'], (req, res, next) => {
                 
                 const formattedDate = `${record.dateOfAward}T00:00:00`;
                 html = html.replace(/data-awarddate="2023-12-21T00:00:00"/g, `data-awarddate="${formattedDate}"`);
-
                 
                 // Pass the reference down into the viewer iframe
                 html = html.replace(/viewer\/data\/false\/0\//g, 'viewer/data/false/0/'); // keep api mock static
                 
-                // The actual iframe loading is done in js/documentViewer.js, we need to pass the reference there.
-                // An easier way is to just replace the global var or modify the JS URL, or inject a script
-                html = html.replace('</head>', `<script>window.CURRENT_REFERENCE = ${record.reference};</script>
-</head>`);
+                let dynamicPdfUrl = '/viewer/view/view.pdf';
+                if (record.pdfPath) {
+                    dynamicPdfUrl = '/uploads/' + record.pdfPath;
+                }
+                
+                // Inject both the reference and the exact PDF URL into the parent window
+                html = html.replace('</head>', `<script>window.CURRENT_REFERENCE = "${record.reference}"; window.DIRECT_PDF_URL = "${dynamicPdfUrl}";</script>\n</head>`);
 
                 // 3. Replace any remaining visible DOM text
                 html = html.replace(/SHUAI BI/g, record.name);
