@@ -24,8 +24,7 @@
         WebViewer({
             initialDoc: '/viewer/view/view.pdf',
             path: '/lib/pdfjs-express-viewer/public',
-            uiPath: 'ui/index.html',
-            licenseKey: 'rXBXB61qW97EPuT3amAc'
+            uiPath: 'ui/index.html'
         }, document.getElementById('viewer')).then(instance => {
             instance.UI.disableFeatures([instance.UI.Feature.Print, instance.UI.Feature.Download, instance.UI.Feature.PageNavigation, instance.UI.Feature.Search, instance.UI.Feature.TextSelection, instance.UI.Feature.Annotations]);
         });
