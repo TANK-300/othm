@@ -5,7 +5,7 @@ const cors = require('cors');
 
 const multer = require('multer');
 
-const uploadDir = '/www/wwwroot/othm-uploads';
+const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -20,19 +20,13 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Expose the uploads directory via static serving so we can just access URLs directly!
-
-
-
-
-
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static('/www/wwwroot/othm-uploads'));
+app.use('/uploads', express.static(uploadDir));
 app.use(express.urlencoded({ extended: true }));
 
-const dataDir = '/www/wwwroot/othm-data';
+const dataDir = path.join(__dirname, 'data');
 if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
 }

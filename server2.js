@@ -6,8 +6,7 @@ const cors = require('cors');
 const app2 = express();
 app2.use(cors());
 
-
-const dataDir = '/www/wwwroot/othm-data';
+const dataDir = path.join(__dirname, 'data');
 if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
 }
